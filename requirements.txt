@@ -1,0 +1,4 @@
+facenet_pytorch
+pillow
+pandas
+tqdm
