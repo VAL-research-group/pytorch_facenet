@@ -24,9 +24,9 @@ def load_meta(filename):
         data = [row for row in reader]
     header = data[0]
     data = data[1:]
-    print(len(data))
     df = pd.DataFrame(data, columns=header)
     return df
+
 
 def load_train_list(filename):
     filename = Path(filename)
@@ -55,27 +55,34 @@ def predict(img:Image):
     resnet.eval()
 
     # Get cropped and prewhitened image tensor
-    img_cropped = mtcnn(img, save_path=None)
+    img_cropped = mtcnn(img, save_path=None) # 顔部分をクロップ
 
     # VGGFace2 classification
     resnet.classify = True
-    img_probs = resnet(img_cropped.unsqueeze(0).to(device))
-    img_probs = nn.Softmax(dim=0)(img_probs.squeeze())
+    img_probs = resnet(img_cropped.unsqueeze(0).to(device)).squeeze() # 8631クラスに対する確率
+    img_probs = nn.Softmax(dim=0)(img_probs) # 0.0~1.0
     return torch_to_numpy(img_probs)
 
 
 def main(args):
-    train_classes, train_list = load_train_list(args.train)
-    meta_df = load_meta(args.meta)
+    # 訓練に使用した人物リストを読み込み
+    train_classes, train_list = load_train_list(args.train) # 8631クラス
+
+    # 全人物データを読み込み
+    meta_df = load_meta(args.meta) # 9131クラス
 
     img = Image.open(args.input)
-    img_probs = predict(img)
-    idx = img_probs.argmax()
-    prob = img_probs[idx]
+    img_probs = predict(img) # 8631クラスそれぞれの確率
+    idx = img_probs.argmax() # 最も確率が高い確率のindex
+    prob = img_probs[idx] # 最も確率が高い確率
+    # 訓練に使用したクラス数と全体のクラス数が異なるので，訓練の方のからidxを参照する必要がある
     person_key = train_classes[idx]
 
+    # metaデータからkeyで検索して人物名等の情報を取得
     meta = meta_df.loc[meta_df['Class_ID']==person_key, :]
-    print(meta, prob)
+    print("[INFO]")
+    print(meta)
+    print("[Probability] %0.1f %%"%(prob*100))
 
 
 if __name__ == '__main__':
