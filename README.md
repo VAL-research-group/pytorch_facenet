@@ -20,6 +20,10 @@ pip install -r requirements.txt
 
 ### データの配置
 ```
+mkdir data
+```
+VGG-Face2を`data`の下に配置．
+```
 ./data/VGG-Face2/data/
 ./data/VGG-Face2/meta/
 ```
