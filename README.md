@@ -30,13 +30,13 @@ python predict.py
 ```
 or
 ```
-python predict.py -i ./data/VGG-Face2/data/test/n000001/0001_01.jpg
+python predict.py -i ./data/VGG-Face2/data/train/n000012/0001_01.jpg
 ```
 
 ## 結果
 ```
 [INFO]
-     Class_ID          Name Sample_Num Flag Gender
-2990  n003027  George_Takei        476    1      m
-[Probability] 22.7 %
+   Class_ID           Name Sample_Num Flag Gender
+11  n000012  Aaron_Ashmore        382    1      m
+[Probability] 69.1 %
 ```

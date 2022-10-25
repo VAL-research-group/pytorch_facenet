@@ -87,7 +87,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', '-i',    type=str, default='./data/VGG-Face2/data/test/n000001/0001_01.jpg')
+    parser.add_argument('--input', '-i',    type=str, default='./data/VGG-Face2/data/train/n000012/0001_01.jpg')
     parser.add_argument('--meta', '-m',     type=str, default='data/VGG-Face2/meta/identity_meta.csv')
     parser.add_argument('--train',          type=str, default='data/VGG-Face2/data/train_list.txt')
     args = parser.parse_args()
