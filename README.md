@@ -1,7 +1,17 @@
 # pytorch_facenet
 ## 準備
+### 環境
+- Windows 11
+- cuda 11.8
+- Python 3.10
+
 ### PyTorchのインストール
 https://pytorch.org/get-started/locally/
+```
+torch==1.12.1+cu116
+torchaudio==0.12.1+cu116
+torchvision==0.13.1+cu116
+```
 
 ### その他必要なライブラリのインストール
 ```
