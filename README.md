@@ -4,6 +4,7 @@
 - Windows 11
 - cuda 11.8
 - Python 3.10
+- Docker image: [haruka0000/vggface:01](https://hub.docker.com/layers/haruka0000/vggface/01/images/sha256-e3afe0af072c50d5e95be82e88e4c761753cba6be7ec87d4f66da1ea0e9643ae?context=repo)
 
 ### PyTorchのインストール
 https://pytorch.org/get-started/locally/
@@ -24,8 +25,9 @@ mkdir data
 ```
 VGG-Face2を`data`の下に配置．
 ```
-./data/VGG-Face2/data/
-./data/VGG-Face2/meta/
+./data/VGG-Face2/data/train/n000012/0001_01.jpg
+./data/VGG-Face2/data/train_list.txt
+data/VGG-Face2/meta/identity_meta.csv
 ```
 
 ## 実行
