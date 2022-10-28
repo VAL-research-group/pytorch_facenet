@@ -16,7 +16,7 @@ torchvision==0.13.1+cu116
 
 ### その他必要なライブラリのインストール
 ```
-pip install -r requirements.txt
+pip install -r Env/requirements.txt
 ```
 
 ### データの配置
