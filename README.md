@@ -14,8 +14,19 @@ torchaudio==0.12.1+cu116
 torchvision==0.13.1+cu116
 ```
 
-### Weights & Biases
-[https://scrapbox.io/VAL/Weights & Biasesの使い方](https://scrapbox.io/VAL/Weights_&_Biases%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9)
+### Weights & Biasesの準備
+以下のリンクを参考にWeights & Biasesのアカウントを作成．
+- [https://scrapbox.io/VAL/Weights & Biasesの使い方](https://scrapbox.io/VAL/Weights_&_Biases%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9)
+
+GitHubアカウントに紐付けできるので簡単に作成できる．
+
+アカウントが作成できたら`vggface`という名前のプロジェクトを作成．
+
+`pip install wandb`を完了した状態で以下のコマンドを実行し，キーを貼り付けてログイン．
+```
+wandb login
+```
+WSで実行している場合はpodを作るたびにログインが必要．
 
 ### その他必要なライブラリのインストール
 ```
@@ -28,15 +39,16 @@ mkdir data
 ```
 VGG-Face2を`data`の下に配置．
 ```
-./data/VGG-Face2/data/train/n000012/0001_01.jpg
-./data/VGG-Face2/data/train_list.txt
-data/VGG-Face2/meta/identity_meta.csv
+./data/VGG-Face2/data/adv/train
+./data/VGG-Face2/data/adv/test
+./data/VGG-Face2/meta/identity_meta.csv
 ```
 
-## Train
+## 学習
 ```
 python train.py --wb_user haruka0000
 ```
+Weights & Biasesのプロジェクト`vggface`に学習の進捗が更新される．
 
 ## 実行
 ```
