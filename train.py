@@ -5,6 +5,8 @@ import argparse
 import torch
 import torch.nn as nn
 import datetime
+import wandb
+from argparse import Namespace
 from torch.optim import SGD, Adam
 from tqdm import tqdm
 from pathlib import Path
@@ -20,6 +22,11 @@ def accuracy(logits, y):
 
 
 def train(args):
+    use_wb = args.wb_user != "" and args.wb_proj != ""
+    if use_wb:
+        wandb.config.update(args)
+        args = Namespace(**wandb.config)
+
     output_dir = Path(args.output_dir) / time_now
     train_loader, valid_loader, classes = load_dataset(args.train_dir,
                                                        args.valid_dir,
@@ -29,17 +36,29 @@ def train(args):
     model = FaceNet(class_size=class_size).to(device)
     optimizer = Adam(model.parameters())
     criterion = nn.CrossEntropyLoss()
+    if use_wb:
+        wandb.watch(model)
 
     os.makedirs(str(output_dir), exist_ok=True)
     prev_loss = 999
     for epoch in range(1, args.epoch+1):
-        train_loss = epoch_fn(epoch, model, optimizer, criterion, train_loader, is_train=True)
-        valid_loss = epoch_fn(epoch, model, optimizer, criterion, valid_loader, is_train=False)
-        filename = "%04d.pth"%(epoch)
-        output_path = output_dir / filename
-        if epoch > 1 and args.save_better_only and prev_loss > valid_loss:
+        train_log = epoch_fn(epoch, model, optimizer, criterion, train_loader, is_train=True)
+        valid_log = epoch_fn(epoch, model, optimizer, criterion, valid_loader, is_train=False)
+
+        if epoch > 1 and args.save_better_only and prev_loss > valid_log['loss']:
+            filename = "%04d.pth"%(epoch)
+            output_path = output_dir / filename
             torch.save({'model': model.state_dict(), 'classes':classes}, str(output_path))
-            prev_loss = valid_loss
+            print('Saved checkpoind. %s'%(str(output_path)))
+            prev_loss = valid_log['loss']
+
+        if use_wb:
+            wandb.log({
+                "Train_loss": train_log['loss'],
+                "Train_acc": train_log['acc'],
+                "Val_loss": valid_log['loss'],
+                "Val_acc": valid_log['acc']
+            })
     print("Finished!")
 
 
@@ -73,7 +92,8 @@ def epoch_fn(ep, model, optimizer, criterion, data_loader, is_train=True):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-    return total_loss / data_loader.__len__() * len(data)
+    return {'loss': total_loss / data_loader.__len__() * len(data),
+            'acc': total_acc / data_loader.__len__() * len(data)}
 
 
 if __name__=='__main__':
@@ -92,5 +112,12 @@ if __name__=='__main__':
                         help="path to folder where validation dataset.")
     parser.add_argument("--save_better_only", type=bool, default=True,
                         help="save only good weights")
+    parser.add_argument("--wb_user", type=str, default="",
+                        help="User name of Weights&Biases")
+    parser.add_argument("--wb_proj", type=str, default="vggface",
+                        help="Project name of Weights&Biases")
     args = parser.parse_args()
+
+    if args.wb_user != "" and args.wb_proj != "":
+        wandb.init(project=args.wb_proj, entity=args.wb_user)
     train(args)
