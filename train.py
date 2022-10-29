@@ -40,17 +40,17 @@ def train(args):
         wandb.watch(model)
 
     os.makedirs(str(output_dir), exist_ok=True)
-    prev_loss = 999
+    prev_acc = 0.0
     for epoch in range(1, args.epoch+1):
         train_log = epoch_fn(epoch, model, optimizer, criterion, train_loader, is_train=True)
         valid_log = epoch_fn(epoch, model, optimizer, criterion, valid_loader, is_train=False)
 
-        if epoch > 1 and args.save_better_only and prev_loss > valid_log['loss']:
+        if epoch > 1 and args.save_better_only and prev_acc < valid_log['acc']:
             filename = "%04d.pth"%(epoch)
             output_path = output_dir / filename
             torch.save({'model': model.state_dict(), 'classes':classes}, str(output_path))
             print('Saved checkpoind. %s'%(str(output_path)))
-            prev_loss = valid_log['loss']
+            prev_acc = valid_log['acc']
 
         if use_wb:
             wandb.log({
@@ -98,8 +98,8 @@ def epoch_fn(ep, model, optimizer, criterion, data_loader, is_train=True):
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epoch', type=int, default=100,
-                        help='number of epoch to train (default: 100)')
+    parser.add_argument('--epoch', type=int, default=200,
+                        help='number of epoch to train (default: 200)')
     parser.add_argument('--batch_size', type=int, default=256,
                         help='input batch size for training (default: 256)')
     parser.add_argument('--val_batch_size', type=int, default=8,
