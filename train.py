@@ -92,14 +92,14 @@ def epoch_fn(ep, model, optimizer, criterion, data_loader, is_train=True):
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-    return {'loss': total_loss / data_loader.__len__() * len(data),
-            'acc': total_acc / data_loader.__len__() * len(data)}
+    return {'loss': total_loss / data_loader.__len__(),
+            'acc': total_acc / data_loader.__len__()}
 
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epoch', type=int, default=50,
-                        help='number of epoch to train (default: 50)')
+    parser.add_argument('--epoch', type=int, default=100,
+                        help='number of epoch to train (default: 100)')
     parser.add_argument('--batch_size', type=int, default=256,
                         help='input batch size for training (default: 256)')
     parser.add_argument('--val_batch_size', type=int, default=8,
