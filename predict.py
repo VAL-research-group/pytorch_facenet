@@ -92,7 +92,7 @@ if __name__ == '__main__':
     parser.add_argument('--meta', '-m',     type=str,
                         default='data/VGG-Face2/meta/identity_meta.csv')
     parser.add_argument('--ckpt',   type=str,
-                        default='weights/221029_0135/0003.pth')
+                        default='weights/221030_0313/0181.pth')
     parser.add_argument('--topk',   type=int,
                         default=3)
     args = parser.parse_args()

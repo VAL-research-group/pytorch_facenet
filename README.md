@@ -56,7 +56,7 @@ python predict.py
 ```
 or
 ```
-python predict.py -i ./data/VGG-Face2/data/adv/test/n000001/0001_01.jpg
+python predict.py --ckpt ./weights/221030_0313/0181.pth -i ./data/VGG-Face2/data/adv/test/n000001/0001_01.jpg
 ```
 
 ## 結果
