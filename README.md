@@ -32,6 +32,8 @@ WSで実行している場合はpodを作るたびにログインが必要．
 ```
 pip install -r Env/requirements.txt
 ```
+### 学習済みモデル
+[Google Drive](https://drive.google.com/drive/folders/1-RLHrneywDEXiDUi1EidlQFSpfwFX9KA?usp=sharing)
 
 ### データの配置
 ```
@@ -42,6 +44,8 @@ VGG-Face2を`data`の下に配置．
 ./data/VGG-Face2/data/adv/train
 ./data/VGG-Face2/data/adv/test
 ./data/VGG-Face2/meta/identity_meta.csv
+# 学習済みモデルを使う場合
+./weights/221030_0313/0181.pth
 ```
 
 ## 学習
@@ -65,16 +69,16 @@ python predict.py --ckpt ./weights/221030_0313/0181.pth -i ./data/VGG-Face2/data
 Rank 1
 [Predict] n000001
 [Name] 14th_Dalai_Lama
-[Probability] 39.6 %
+[Probability] 93.1 %
 --------------------------------------------------
 Rank 2
-[Predict] n001830
-[Name] Cristóbal_Montoro
-[Probability] 18.0 %
+[Predict] n009288
+[Name] Song_Dandan
+[Probability] 2.2 %
 --------------------------------------------------
 Rank 3
-[Predict] n002329
-[Name] Dési_Bouterse
-[Probability] 4.8 %
+[Predict] n000958
+[Name] Benigno_Noynoy_Aquino_III
+[Probability] 1.0 %
 --------------------------------------------------
 ```
