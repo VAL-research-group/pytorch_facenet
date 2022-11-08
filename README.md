@@ -47,6 +47,10 @@ VGG-Face2を`data`の下に配置．
 # 学習済みモデルを使う場合
 ./weights/221030_0313/0181.pth
 ```
+生成画像を入れておくフォルダ`result/img`を作っておく
+```
+.result/img/n000001-0001_01-result.jpg
+```
 
 ## 学習
 ```
@@ -81,4 +85,9 @@ Rank 3
 [Name] Benigno_Noynoy_Aquino_III
 [Probability] 1.0 %
 --------------------------------------------------
+```
+
+## 攻撃
+```
+python advsticker.py
 ```
