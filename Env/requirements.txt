@@ -4,3 +4,4 @@ pandas
 tqdm
 sklearn
 wandb
+scikit-image
