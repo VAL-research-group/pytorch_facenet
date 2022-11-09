@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from model import FaceNet
-
+from PIL import Image
 class ImageDot(nn.Module):
     """
     Class to treat an image with translucent color dots.
@@ -19,8 +19,8 @@ class ImageDot(nn.Module):
         self.stds = [0.229, 0.224, 0.225]
         self.alpha = 0.9
         self.radius = 25.0
-        self.beta = 20.0  #2.0    #数字が大きいほどぼやけがなくなる
-        self.dot_num = 4.0
+        self.beta = 2.0  #2.0    #数字が大きいほどぼやけがなくなる
+        self.dot_num = 2.0
         self.dn = self.dot_num+1.0
          #3*3= 9
         self.center = nn.Parameter(torch.tensor([
@@ -58,6 +58,8 @@ class ImageDot(nn.Module):
         for idx in range(self.center.shape[0]):
             mask = self._create_circle_mask(height, width,
                                             self.center[idx] * 255.0, self.beta).to(self.device)
+
+
             normalized_color = self._normalize_color(self.color[idx],
                                                      self.means, self.stds)
             blended = self._create_blended_img(blended, mask, normalized_color)
@@ -67,14 +69,14 @@ class ImageDot(nn.Module):
         return list(map(lambda x, m, s: (x - m) / s, color, means, stds))
 
     def _create_circle_mask(self, height, width, center, beta):
-        hv, wv = torch.meshgrid([torch.arange(0, height), torch.arange(0, width)])
+        hv, wv = torch.meshgrid([torch.arange(0, height), torch.arange(0, width)], indexing='xy')
         # torch.arange(0, height) -> tensor([0,1,2,...,(height-1)])  0～height-1 の　height個のリスト
         # torch.arange(0, wedth) -> tensor([0,1,2,...,(width-1)])
         # hv = tensor([[0,0,...,0],[1,1,...,1],......])
         # hw = tensor([[0,1,...,(width-1)],[0,1,...,(width-1)],...])
         hv, wv = hv.type(torch.FloatTensor), wv.type(torch.FloatTensor)
         d = ((hv - center[0]) ** 2 + (wv - center[1]) ** 2) / self.radius ** 2   #ここで形が決まる
-        #print(d.shape) #[256,256]
+        # print("d", d)
         #print(d)
         #torch.set_printoptions(edgeitems=100)   #表示限界を決める文
         return torch.exp(- d ** beta + 1e-10)
@@ -82,9 +84,12 @@ class ImageDot(nn.Module):
     def _create_blended_img(self, base, mask, color):
         alpha_tile = self.alpha * mask.expand(3, mask.shape[0], mask.shape[1])
         color_tile = torch.zeros_like(base)
+        assert not torch.isnan(alpha_tile).any()
+        assert not torch.isnan(color_tile).any()
         for c in range(3):
             color_tile[:, c, :, :] = color[c]
         return (1. - alpha_tile) * base + alpha_tile * color_tile
+
 
 class AttackModel(nn.Module):
     """
@@ -94,22 +99,23 @@ class AttackModel(nn.Module):
     def __init__(self, ckpt, device):
         super(AttackModel, self).__init__()
         self.image_dot = ImageDot(device)
+
         # load trained model
-        #checkpoint = torch.load(ckpt)
-        self.checkpoint = torch.load(ckpt, map_location=torch.device('cpu'))
-        self.classes = np.array(self.checkpoint['classes'])
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        checkpoint = torch.load(ckpt)
+        self.classes = np.array(checkpoint['classes'])
 
         # Create an inception resnet (in eval mode):
         self.base_model = FaceNet(class_size=len(self.classes)).to(device)
+        self.base_model.load_state_dict(checkpoint['model'])
+        self.base_model = self.base_model.eval()
         self._freeze_pretrained_model()
-        
+
     def _freeze_pretrained_model(self):
-        self.base_model.load_state_dict(self.checkpoint['model'])
-        self.base_model.eval()
-        for name, module in self.base_model._modules.items():
-            module.requires_grad = False # 全ての層を凍結
+        for param in self.base_model.parameters():
+            param.requires_grad = False
 
     def forward(self, x):
         x = self.image_dot(x)
-        return self.base_model(x)
+        assert not torch.isnan(x).any()
+        pred = self.base_model(x)
+        return pred

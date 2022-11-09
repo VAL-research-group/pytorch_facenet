@@ -12,6 +12,8 @@ runs/*
 wandb/*
 *.json
 evaluation/*
+result/*.jpg
+result/**/**.jpg
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

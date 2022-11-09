@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
+import numpy as np
 from facenet_pytorch import InceptionResnetV1
-
 
 class FaceNet(nn.Module):
     def __init__(self, class_size:int, pretrained:str='vggface2'):
@@ -16,3 +16,6 @@ class FaceNet(nn.Module):
     def forward(self, x):
         output = self.model(x)
         return output
+
+
+
