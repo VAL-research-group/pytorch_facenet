@@ -53,7 +53,7 @@ VGG-Face2は`file/dataset/Face/VGG-Face2`にある．今回はその中でも少
 
 ## 学習
 ```
-python train.py --wb_user haruka0000
+python train.py --wb_user [W&Bのユーザー名]
 ```
 Weights & Biasesのプロジェクト`vggface`に学習の進捗が更新される．
 
