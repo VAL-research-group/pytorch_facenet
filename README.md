@@ -7,14 +7,12 @@
 - Docker image: [haruka0000/vggface:1.0](https://hub.docker.com/layers/haruka0000/vggface/1.0/images/sha256-c7c0207b62c812df96b3c3202ba9e7ace167c4f76be6257c52c16f9d40dd85cf?context=repo)
 
 ### PyTorchのインストール
-以下のリンクから適切なCUDAバージョンのものを選択してインストールする．
+ローカルで実行する場合は以下のリンクから適切なCUDAバージョンのものを選択してインストールする．
+上記のdockerイメージを使用する場合は不要．
 https://pytorch.org/get-started/locally/
-```
-torch==1.12.1+cu116
-torchaudio==0.12.1+cu116
-torchvision==0.13.1+cu116
-```
+
 ### その他必要なライブラリのインストール
+上記のdockerイメージを使用する場合は不要．
 ```
 pip install -r Env/requirements.txt
 ```

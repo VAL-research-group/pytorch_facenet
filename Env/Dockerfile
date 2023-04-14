@@ -20,9 +20,9 @@ ENV TZ=Asia/Tokyo
 # ソフトの追加
 RUN apt-get install -y git vim
 # 必要なライブラリの追加(Python3 を使う場合)
-RUN apt-get install -y gcc build-essential libssl-dev zlib1g-dev \ 
-                        libbz2-dev libreadline-dev libsqlite3-dev \ 
-                        wget curl llvm libncurses5-dev libncursesw5-dev \ 
+RUN apt-get install -y gcc build-essential libssl-dev zlib1g-dev \
+                        libbz2-dev libreadline-dev libsqlite3-dev \
+                        wget curl llvm libncurses5-dev libncursesw5-dev \
                         xz-utils libffi-dev liblzma-dev libjpeg-dev \
                         python3 python3-pip
 
@@ -58,6 +58,9 @@ ENV CONDA_DEFAULT_ENV myenv && \
 COPY requirements.txt /root/
 SHELL ["conda", "run", "-n", "myenv", "/bin/bash", "-c"]
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+    pip install torch==1.12.1 \
+                torchaudio==0.12.1 \
+                torchvision==0.13.1
+RUN pip install -r requirements.txt
 # $python3 →純正のPython3
 # $python →AnacondaのPythonなので注意

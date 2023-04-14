@@ -2,5 +2,5 @@ facenet_pytorch
 pillow
 pandas
 tqdm
-sklearn
+scikit-learn
 wandb
