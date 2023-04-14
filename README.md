@@ -7,11 +7,16 @@
 - Docker image: [haruka0000/vggface:1.0](https://hub.docker.com/layers/haruka0000/vggface/1.0/images/sha256-c7c0207b62c812df96b3c3202ba9e7ace167c4f76be6257c52c16f9d40dd85cf?context=repo)
 
 ### PyTorchのインストール
+以下のリンクから適切なCUDAバージョンのものを選択してインストールする．
 https://pytorch.org/get-started/locally/
 ```
 torch==1.12.1+cu116
 torchaudio==0.12.1+cu116
 torchvision==0.13.1+cu116
+```
+### その他必要なライブラリのインストール
+```
+pip install -r Env/requirements.txt
 ```
 
 ### Weights & Biasesの準備
@@ -28,10 +33,7 @@ wandb login
 ```
 WSで実行している場合はpodを作るたびにログインが必要．
 
-### その他必要なライブラリのインストール
-```
-pip install -r Env/requirements.txt
-```
+
 ### 学習済みモデル
 [Google Drive](https://drive.google.com/drive/folders/1-RLHrneywDEXiDUi1EidlQFSpfwFX9KA?usp=sharing)
 
@@ -40,10 +42,13 @@ pip install -r Env/requirements.txt
 mkdir data
 ```
 VGG-Face2を`data`の下に配置．
+VGG-Face2は`file/dataset/Face/VGG-Face2`にある．今回はその中でも少量のデータを取り出した`adv`を使用する．
+以下のようなディレクトリ構成になるように配置する．
 ```
 ./data/VGG-Face2/data/adv/train
 ./data/VGG-Face2/data/adv/test
 ./data/VGG-Face2/meta/identity_meta.csv
+
 # 学習済みモデルを使う場合
 ./weights/221030_0313/0181.pth
 ```
