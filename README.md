@@ -1,4 +1,7 @@
 # pytorch_facenet
+これは顔画像の識別をするためのプログラム．
+facenetと呼ばれる事前学習済みライブラリを小規模データでファインチューニングする．
+
 ## 準備
 ### 環境
 - Windows 11
@@ -41,7 +44,7 @@ mkdir data
 ```
 VGG-Face2を`data`の下に配置．
 VGG-Face2は`file/dataset/Face/VGG-Face2`にある．今回はその中でも少量のデータを取り出した`adv`を使用する．
-以下のようなディレクトリ構成になるように配置する．
+`adv.zip`を自分のフォルダに移動させて解凍し，以下のようなディレクトリ構成になるように配置する．
 ```
 ./data/VGG-Face2/data/adv/train
 ./data/VGG-Face2/data/adv/test
